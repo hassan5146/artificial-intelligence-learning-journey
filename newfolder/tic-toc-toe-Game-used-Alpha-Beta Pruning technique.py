@@ -1,3 +1,6 @@
+#tic-toc-toe-Game-used-Alpha-Beta Pruning technique
+
+
 import math
 
 board = [" " for _ in range(9)]
