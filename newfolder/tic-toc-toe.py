@@ -1,3 +1,5 @@
+# USED Minimax algorithm TO CREATE TIC-TOC-TOE GAME
+
 import math
 
 board = [" " for _ in range(9)]
