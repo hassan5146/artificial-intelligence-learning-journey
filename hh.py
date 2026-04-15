@@ -1,15 +1,15 @@
 import math
 
-# Initialize board
+
 board = [" " for _ in range(9)]
 
-# Print the board
+
 def print_board():
     for i in range(0, 9, 3):
         print(board[i], "|", board[i+1], "|", board[i+2])
     print()
 
-# Check winner
+
 def check_winner(player):
     win_positions = [
         [0,1,2],[3,4,5],[6,7,8],
@@ -21,11 +21,10 @@ def check_winner(player):
             return True
     return False
 
-# Check draw
 def is_draw():
     return " " not in board
 
-# Minimax algorithm
+
 def minimax(is_maximizing):
     if check_winner("O"):
         return 1
@@ -53,7 +52,7 @@ def minimax(is_maximizing):
                 best = min(score, best)
         return best
 
-# Best move for computer
+
 def best_move():
     best_score = -math.inf
     move = 0
@@ -96,7 +95,7 @@ while True:
         print("Draw!")
         break
 
-    # Computer move
+    
     comp = best_move()
     board[comp] = "O"
 

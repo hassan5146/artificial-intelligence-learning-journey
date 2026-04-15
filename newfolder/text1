@@ -1,0 +1,41 @@
+
+# Bank Account Login System
+correct_pin = "1234"
+
+while True:
+    pin = input("Enter your PIN: ")
+
+    if pin == correct_pin:
+        print("Login Successful")
+        break
+    elif pin == "0000":
+        print("Account Locked")
+        break
+    else:
+        print("Incorrect PIN. Try again.")
+
+# Smart Traffic Light Control System
+roads = {"A": 1, "B": 0, "C": 1}  # 0=LOW, 1=HIGH traffic
+last_green = None
+total_cost = 0
+
+def choose_road(roads, last_green):
+    # Priority: HIGH traffic roads first, avoid repeating last road
+    for road, traffic in roads.items():
+        if traffic == 1 and road != last_green:
+            return road
+    # If no HIGH traffic, pick any LOW traffic road
+    for road, traffic in roads.items():
+        if traffic == 0 and road != last_green:
+            return road
+    return None
+
+while any(t == 1 for t in roads.values()):
+    selected = choose_road(roads, last_green)
+    print(f"GREEN -> Road {selected}")
+    roads[selected] = 0  # Clear traffic
+    last_green = selected
+    total_cost += 2
+
+print("All roads cleared!")
+print("Total Path Cost:", total_cost)

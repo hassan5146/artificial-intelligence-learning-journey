@@ -1,0 +1,169 @@
+Great, Hassan — I’ve gone through your **AI Lab Mid Exam (Spring 2026)** paper. Let’s break it down into **assignment-style guidance** so you can practice step by step. I’ll give you **Python demo code**, explanations, and structured notes so you can prepare confidently.
+
+---
+
+## 🔹 Question 1a: Bank Account Login System
+Here’s a simple loop-based solution:
+
+```python
+# Bank Account Login System
+correct_pin = "1234"
+
+while True:
+    pin = input("Enter your PIN: ")
+
+    if pin == correct_pin:
+        print("Login Successful")
+        break
+    elif pin == "0000":
+        print("Account Locked")
+        break
+    else:
+        print("Incorrect PIN. Try again.")
+```
+
+**Key points:**
+- `while True` keeps asking until a break condition.
+- Correct PIN → success.
+- Special PIN `0000` → lock account.
+- Any other input → retry.
+
+---
+
+## 🔹 Question 1b: Model-Based Reflex Agent (Smart Traffic Light)
+
+We simulate **traffic conditions** and use **internal memory** (last road given GREEN):
+
+```python
+# Smart Traffic Light Control System
+roads = {"A": 1, "B": 0, "C": 1}  # 0=LOW, 1=HIGH traffic
+last_green = None
+total_cost = 0
+
+def choose_road(roads, last_green):
+    # Priority: HIGH traffic roads first, avoid repeating last road
+    for road, traffic in roads.items():
+        if traffic == 1 and road != last_green:
+            return road
+    # If no HIGH traffic, pick any LOW traffic road
+    for road, traffic in roads.items():
+        if traffic == 0 and road != last_green:
+            return road
+    return None
+
+while any(t == 1 for t in roads.values()):
+    selected = choose_road(roads, last_green)
+    print(f"GREEN -> Road {selected}")
+    roads[selected] = 0  # Clear traffic
+    last_green = selected
+    total_cost += 2
+
+print("All roads cleared!")
+print("Total Path Cost:", total_cost)
+```
+
+**Notes:**
+- Internal memory = `last_green`.
+- Cost increments by +2 per action.
+- Goal: all roads → LOW traffic.
+
+---
+
+## 🔹 Question 2: Robot Navigation (BFS vs A*)
+
+You’ll need to implement **graph search**. Skeleton code:
+
+```python
+from collections import deque
+import heapq
+
+# Graph edges with costs
+graph = {
+    "S": [("A", 3), ("B", 5)],
+    "A": [("D", 9)],
+    "B": [("C", 8), ("E", 13)],
+    "C": [("F", 5)],
+    "D": [("H", 12)],
+    "E": [("H", 20)],
+    "F": [("G2", 3)],
+    "H": [("G1", 4)],
+}
+
+heuristics = {"S":9,"A":12,"B":8,"C":13,"D":7,"E":5,"F":3,"H":12,"G1":0,"G2":0}
+
+# BFS
+def bfs(start, goals):
+    queue = deque([(start, [start])])
+    while queue:
+        node, path = queue.popleft()
+        if node in goals:
+            return path
+        for neighbor, _ in graph.get(node, []):
+            queue.append((neighbor, path + [neighbor]))
+
+# A*
+def astar(start, goals):
+    pq = [(heuristics[start], 0, start, [start])]
+    while pq:
+        est, cost, node, path = heapq.heappop(pq)
+        if node in goals:
+            return path, cost
+        for neighbor, edge_cost in graph.get(node, []):
+            new_cost = cost + edge_cost
+            heapq.heappush(pq, (new_cost + heuristics[neighbor], new_cost, neighbor, path+[neighbor]))
+
+print("BFS Path:", bfs("S", {"G1","G2"}))
+print("A* Path:", astar("S", {"G1","G2"}))
+```
+
+**Explanation:**
+- BFS → explores level by level (no heuristics).
+- A* → uses `cost + heuristic` to guide search.
+- Heuristics reduce unnecessary exploration → faster pathfinding.
+
+---
+
+## 🔹 Question 3: Genetic Algorithm (One-Max Problem)
+
+```python
+import random
+
+def fitness(chromosome):
+    return sum(chromosome)
+
+def crossover(p1, p2):
+    point = random.randint(1, len(p1)-1)
+    return p1[:point] + p2[point:], p2[:point] + p1[point:]
+
+def mutate(chromosome, prob=0.1):
+    if random.random() < prob:
+        idx = random.randint(0, len(chromosome)-1)
+        chromosome[idx] = 1 - chromosome[idx]
+    return chromosome
+
+# GA loop
+population = [[random.randint(0,1) for _ in range(8)] for _ in range(6)]
+generation = 0
+
+while True:
+    population.sort(key=fitness, reverse=True)
+    if fitness(population[0]) == 8 or generation > 100:
+        print("Solution:", population[0], "Generation:", generation)
+        break
+    new_pop = []
+    for i in range(0, len(population), 2):
+        p1, p2 = population[i], population[i+1]
+        c1, c2 = crossover(p1, p2)
+        new_pop.append(mutate(c1))
+        new_pop.append(mutate(c2))
+    population = new_pop
+    generation += 1
+```
+
+**Goal:** evolve until `[1,1,1,1,1,1,1,1]`.
+
+---
+
+✅ This breakdown matches your exam paper perfectly: **step-by-step code demos, explanations, and assignment-style clarity.**  
+
+Would you like me to also create a **comparison chart (BFS vs A*)** and a **visual demo of GA evolution** so you can revise faster for your exam?
